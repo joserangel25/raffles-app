@@ -6,9 +6,18 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --color-primary: #1d1238;
+  --color-secondary: #0f0a1e;
+  --color-tirthy: #baa3ff;
+  --color-forthy: #9114f7;
+
 }
 
-@media (prefers-color-scheme: dark) {
+body {
+  box-sizing: border-box;
+}
+
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
@@ -30,4 +39,4 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-}
+} */
