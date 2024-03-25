@@ -2,6 +2,7 @@
 
 import { loginUser } from "@/actions";
 import { notify } from "@/utils";
+import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface InputsForms {
@@ -14,12 +15,12 @@ export const LoginForm = () => {
 
   const onSubmitLogin: SubmitHandler<InputsForms> = async (credentials) => {
     const { ok } = await loginUser(credentials)
-    if (ok) {
-      window.location.replace('/')
+    if (!ok) {
+      notify({ type: 'error', message: 'Las credenciales son incorrectas' })
       return
     }
 
-    notify({ type: 'error', message: 'Las credenciales son incorrectas' })
+    window.location.reload()
   }
 
   return (

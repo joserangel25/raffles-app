@@ -2,22 +2,31 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useSession } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
 import { logOutUser } from "@/actions"
 import { Button } from "../button/Button"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
 
 export const Navbar = () => {
   const { data: session } = useSession()
   const [logOutActioned, setLogOutActioned] = useState(false)
+
   const router = useRouter()
 
+  console.log({ session })
+
+  // useEffect(() => {
+  //   if (logOutActioned) {
+  //     window.location.reload()
+  //   }
+  // }, [logOutActioned, session, router])
+
   useEffect(() => {
-    if (logOutActioned) {
-      window.location.reload()
-    }
-  }, [logOutActioned, session, router])
+
+  }, [])
+
 
 
   return (
@@ -31,11 +40,21 @@ export const Navbar = () => {
             <Button
               text="Sing Out"
               onClick={() => {
-                setLogOutActioned(true)
-                logOutUser()
+                // setLogOutActioned(true)
+                signOut()
               }}
             />
-            <div className="w-8 h-8 rounded-full bg-[var(--color-tirthy)]" />
+            <div className={`w-10 h-10 rounded-full  `}>
+              <Link href={'/dashboard'}>
+                <Image
+                  src={session?.user?.image ? session.user.image : '/images/icons/user-avatar.png'}
+                  alt="Imagen"
+                  width={45}
+                  height={45}
+                  className="object-cover rounded-full"
+                />
+              </Link>
+            </div>
           </div>
         ) : (
           <Link

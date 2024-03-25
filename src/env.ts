@@ -1,0 +1,7 @@
+export const ENV = {
+  GITHUB_ID: process.env.GITHUB_ID,
+  GITHUB_SECRET: process.env.GITHUB_SECRET,
+  DISCORD_ID: process.env.AUTH_DISCORD_ID,
+  DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
+  DISCORD_ID_SERVER: process.env.DISCORD_ID_SERVER
+}

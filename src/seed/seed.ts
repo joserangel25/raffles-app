@@ -1,15 +1,20 @@
 import prisma from "../lib/prisma"
+import bcrypt from "bcryptjs"
 import { initialData } from "./data-seed";
 
 async function main() {
   if (process.env.NODE_ENV === 'production') return;
 
+  await prisma.raffle.deleteMany()
   await prisma.user.deleteMany()
 
   const { users, raffles } = initialData
 
   await prisma.user.createMany({
-    data: users
+    data: users.map(user => ({
+      ...user,
+      password: bcrypt.hashSync(user.password)
+    }))
   })
   const usersDb = await prisma.user.findMany()
   await prisma.raffle.createMany({
