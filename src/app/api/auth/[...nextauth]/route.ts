@@ -1,107 +1,20 @@
-// import NextAuth from "next-auth/next";
-// import CredentialsProvider from "next-auth/providers/credentials";
-// import GoogleProvider from "next-auth/providers/google";
-// import prisma from "@/lib/prisma";
-
-// import type { AuthOptions } from "next-auth";
-// // import * as bcrypt from "bcrypt";
-
-// import { User } from "@prisma/client";
-
-// export const authOptions: AuthOptions = {
-//   pages: {
-//     signIn: "/auth/login",
-//   },
-//   session: {
-//     strategy: "jwt",
-//   },
-//   jwt: {
-//     secret: process.env.NEXTAUTH_SECRET,
-//   },
-//   providers: [
-//     GoogleProvider({
-//       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-//       idToken: true,
-
-//       authorization: {
-//         params: {
-//           scope: "openid profile email",
-//         },
-//       },
-//     }),
-//     CredentialsProvider({
-//       name: "Credentials",
-
-//       credentials: {
-//         username: {
-//           label: "User Name",
-//           type: "text",
-//           placeholder: "Your User Name",
-//         },
-//         password: {
-//           label: "Password",
-//           type: "password",
-//         },
-//       },
-//       async authorize(credentials) {
-//         const user = await prisma.user.findUnique({
-//           where: {
-//             email: credentials?.username,
-//           },
-//         });
-
-//         if (!user) throw new Error("User name or password is not correct");
-
-//         // This is Naive Way of Comparing The Passwords
-//         // const isPassowrdCorrect = credentials?.password === user.password;
-//         if (!credentials?.password) throw new Error("Please Provide Your Password");
-//         const isPassowrdCorrect = await bcrypt.compare(credentials.password, user.password);
-
-//         if (!isPassowrdCorrect) throw new Error("User name or password is not correct");
-
-//         if (!user.emailVerified) throw new Error("Please verify your email first!");
-
-//         const { password, ...userWithoutPass } = user;
-//         return userWithoutPass;
-//       },
-//     }),
-//   ],
-
-//   callbacks: {
-//     async jwt({ token, user }) {
-//       if (user) token.user = user as User;
-//       return token;
-//     },
-
-//     async session({ token, session }) {
-//       session.user = token.user;
-//       return session;
-//     },
-//   },
-// };
-
-// const handler = NextAuth(authOptions);
-
-// export { handler as GET, handler as POST };
-
-
 import NextAuth, { type NextAuthOptions } from "next-auth";
-import z from "zod"
-import { ENV } from "@/env";
-import DiscordProvider from "next-auth/providers/discord";
 import Credentials from "next-auth/providers/credentials";
-import GithubProvider from "next-auth/providers/github";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { isRegisterInServerDiscord, verifyUserWithEmailAndPassword } from "@/database";
+import DiscordProvider from "next-auth/providers/discord";
+import z from "zod"
+
+import { checkIsUserRegistered, verifyUserWithEmailAndPassword } from "@/database";
 import { createNewUser } from "@/actions";
+import { ENV } from "@/env";
+import { IUser } from "@/interfaces/user";
+
 
 const scopes = ["identify", "guilds", "email"].join(" ")
 
-
 export const authConfig: NextAuthOptions = {
   pages: {
-    signIn: '/auth/login'
+    signIn: '/auth/login',
+    newUser: '/auth/register'
   },
   // adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
@@ -158,7 +71,18 @@ export const authConfig: NextAuthOptions = {
     //   return true
     // },
 
+    //TODO: validar que no se pueda loguear con credenciales si se registró con provider o al revés
+    // async signIn({account, user}){
+    //   if(account && account.type === 'oauth'){
+    //     const isRegisterUser = await checkIsUserRegistered(user.email!)
+
+    //     if(isRegisterUser) return false
+    //   }
+    //   return true
+    // },
+
     async jwt({ token, user, account }) {
+      // console.log({ user, account })
       if (account) {
         token.accessToken = account.access_token!
 
@@ -168,23 +92,26 @@ export const authConfig: NextAuthOptions = {
             const newUser = await createNewUser({
               name: user.name!,
               email: user.email!,
-              discordId: user.id
+              discordId: user.id,
+              image: user.image!
             })
-            token.isDevtallesUser = await isRegisterInServerDiscord(account.access_token!)
+            // token.isDevtallesUser = await isRegisterInServerDiscord(account.access_token!)
             token.user = newUser
             break;
 
           case 'credentials':
-            token.user = user
+            token.user = user as IUser
             break;
         }
       }
-      // const dbUser = await prisma.user.findUnique({ where: { email: token.email! } })
       return token
     },
 
     async session({ session, user, token }) {
-      console.log(token)
+      if (token) {
+        session.accessToken = token.accessToken
+        session.user = token.user
+      }
       return session
     }
   }

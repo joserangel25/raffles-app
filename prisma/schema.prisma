@@ -17,6 +17,7 @@ model User {
   id                 String        @id @unique @default(uuid())
   name               String
   email              String        @unique
+  image              String?
   password           String?
   discordId          String        @default("")
   myRaffles          Raffle[]
@@ -24,13 +25,13 @@ model User {
 }
 
 model Raffle {
-  id              String    @id @unique @default(uuid())
+  id              String  @id @unique @default(uuid())
   title           String
   description     String
-  maxParticipants Int?
-  endDate         DateTime?
+  maxParticipants Int?    @default(0)
+  // endDate         DateTime?
   image           String?
-  played          Boolean   @default(false)
+  played          Boolean @default(false)
 
   // Relaciones
   author       User          @relation(fields: [authorId], references: [id])

@@ -1,34 +1,13 @@
 'use client'
 
-import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useSession, signOut } from "next-auth/react"
-import { logOutUser } from "@/actions"
-import { Button } from "../button/Button"
-import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { useSession, signOut } from "next-auth/react"
+import { Button } from "../button/Button"
 
 
 export const Navbar = () => {
   const { data: session } = useSession()
-  const [logOutActioned, setLogOutActioned] = useState(false)
-
-  const router = useRouter()
-
-  console.log({ session })
-
-  // useEffect(() => {
-  //   if (logOutActioned) {
-  //     window.location.reload()
-  //   }
-  // }, [logOutActioned, session, router])
-
-  useEffect(() => {
-
-  }, [])
-
-
-
   return (
     <nav className="py-4 sticky top-0 bg-[var(--color-secondary)] flex px-6 lg:px-10 justify-between items-center">
       <Link href={'/'}>
@@ -39,10 +18,7 @@ export const Navbar = () => {
           <div className="flex items-center gap-3">
             <Button
               text="Sing Out"
-              onClick={() => {
-                // setLogOutActioned(true)
-                signOut()
-              }}
+              onClick={() => signOut()}
             />
             <div className={`w-10 h-10 rounded-full  `}>
               <Link href={'/dashboard'}>

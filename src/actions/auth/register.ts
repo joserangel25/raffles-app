@@ -6,19 +6,24 @@ import bcrypt from 'bcryptjs'
 interface Props {
   email: string;
   name: string;
+  image: string;
   password?: string;
   discordId?: string;
 }
 
-export const createNewUser = async ({ email, name, password = '', discordId = '' }: Props) => {
+export const createNewUser = async ({ email, name, image = '', password = '', discordId = '' }: Props) => {
   try {
 
     const existUser = await prisma.user.findUnique({
-      where: { email }, select: {
+      where: { email },
+      select: {
         id: true,
         name: true,
         email: true,
-        discordId: true
+        image: true,
+        discordId: true,
+        myRaffles: true,
+        participateRaffles: true
       }
     })
 
@@ -27,17 +32,21 @@ export const createNewUser = async ({ email, name, password = '', discordId = ''
     }
 
     const newUser = await prisma.user.create({
-      data: { email, name, password: bcrypt.hashSync(password), discordId },
+      data: { email, name, password: bcrypt.hashSync(password), discordId, image },
       select: {
         id: true,
         name: true,
         email: true,
-        discordId: true
+        image: true,
+        discordId: true,
+        myRaffles: true,
+        participateRaffles: true
       }
     })
     return newUser
   } catch (error) {
     console.log(error)
-    return null
+    throw new Error("Error al crear al usuario, valide con soporte.");
+
   }
 }
