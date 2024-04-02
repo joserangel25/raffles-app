@@ -20,7 +20,7 @@ export const LoginForm = () => {
       return
     }
 
-    window.location.reload()
+    window.location.replace('/dashboard')
   }
 
   return (
@@ -31,7 +31,7 @@ export const LoginForm = () => {
           type="email"
           id="email"
           required
-          className="py-2 rounded-lg bg-[var(--color-secondary)] outline-none pl-3"
+          className="input-base"
           placeholder="email@google.com"
           {...register('email', { required: true, pattern: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/ })}
         />
@@ -43,7 +43,7 @@ export const LoginForm = () => {
           type="password"
           id="password"
           required
-          className="py-2 rounded-lg bg-[var(--color-secondary)] outline-none pl-3"
+          className="input-base"
           placeholder="******"
           {...register('password', { required: true, minLength: 6 })}
         />

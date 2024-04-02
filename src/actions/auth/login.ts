@@ -1,14 +1,13 @@
 // 'use server'
 
-import prisma from "@/lib/prisma"
-import { signIn, SignInAuthorizationParams } from "next-auth/react"
-import bcrypt from "bcryptjs"
+import { signIn } from "next-auth/react"
 
 export const loginUser = async (credentials: { email: string, password: string }) => {
   try {
     const res = await signIn('credentials', {
       ...credentials,
-      redirect: false
+      redirect: false,
+      // callbackUrl: '/dashboard'
     })
     return {
       ok: res!.ok

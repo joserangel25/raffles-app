@@ -10,7 +10,7 @@
   --color-secondary: #0f0a1e;
   --color-tirthy: #baa3ff;
   --color-forthy: #9114f7;
-
+  --color-light: #E8D2FF;
 }
 
 body {
@@ -40,3 +40,91 @@ body {
     text-wrap: balance;
   }
 } */
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+}
+
+input[type=date]::-webkit-calendar-picker-indicator {
+  font-size: 12px;
+  background-color: #9114f7;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+@layer base {
+  .bg-primary {
+    @apply bg-[var(--color-primary)];
+  }
+
+  .bg-secondary {
+    @apply bg-[var(--color-secondary)];
+  }
+
+  .bg-tirthy {
+    @apply bg-[var(--color-tirthy)];
+  }
+
+  .bg-forthy {
+    @apply bg-[var(--color-forthy)];
+  }
+
+  .bg-light {
+    @apply bg-[var(--color-light)];
+  }
+
+  .text-primary {
+    @apply text-[var(--color-primary)];
+  }
+
+  .text-secondary {
+    @apply text-[var(--color-secondary)];
+  }
+
+  .text-tirthy {
+    @apply text-[var(--color-tirthy)];
+  }
+
+  .btn {
+    @apply px-5 py-2 text-center rounded-lg border-2 transition-all duration-200 font-medium;
+  }
+
+  .btn-primary {
+    @apply bg-secondary text-white hover:text-secondary hover:bg-tirthy border-[var(--color-tirthy)] hover:border-[var(--color-secondary)];
+  }
+
+  .btn-secondary {
+    @apply bg-tirthy text-secondary hover:text-white hover:bg-secondary border-[var(--color-secondary)] hover:border-[var(--color-tirthy)];
+  }
+
+  .input-base {
+    @apply py-2 rounded-lg bg-secondary outline-none pl-3
+  }
+}
