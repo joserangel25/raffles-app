@@ -43,7 +43,7 @@ export const initialData: SeedData = {
     {
       title: "TV de 100 pulgadas",
       description: "Es una rifa muy buena",
-      endDate: new Date().toISOString(),
+      // endDate: new Date().toISOString(),
       authorId: "f795f93d-d489-4309-9a45-4f954ace07b5"
     },
     {

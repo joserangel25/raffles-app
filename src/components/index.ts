@@ -2,6 +2,8 @@ export * from './ui/button/Button'
 export * from './ui/navbar/Navbar'
 export * from './ui/footer/Footer'
 export * from './ui/list-users/ListUsers'
+export * from './ui/list-users/UserCard'
+export * from './ui/modal/Modal'
 
 
 export * from './auth/LoginForm'
@@ -13,3 +15,5 @@ export * from './provider/Provider'
 export * from './dashboard/'
 
 export * from './raffle/CardRaffle'
+export * from './raffle/StatusRaffle'
+export * from './raffle/ButtonAddModerator'

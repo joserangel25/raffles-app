@@ -6,7 +6,7 @@ import z from "zod"
 import { checkIsUserRegistered, verifyUserWithEmailAndPassword } from "@/database";
 import { createNewUser } from "@/actions";
 import { ENV } from "@/env";
-import { IUser } from "@/interfaces/user";
+import { IUserFull } from "@/interfaces/user";
 
 
 const scopes = ["identify", "guilds", "email"].join(" ")
@@ -100,7 +100,7 @@ export const authConfig: NextAuthOptions = {
             break;
 
           case 'credentials':
-            token.user = user as IUser
+            token.user = user as IUserFull
             break;
         }
       }
@@ -108,10 +108,11 @@ export const authConfig: NextAuthOptions = {
     },
 
     async session({ session, user, token }) {
-      if (token) {
-        session.accessToken = token.accessToken
-        session.user = token.user
-      }
+
+      // if (token) {
+      session.accessToken = token.accessToken
+      session.user = token.user
+      // }
       return session
     }
   }

@@ -23,7 +23,16 @@ async function main() {
       authorId: ind !== 1 ? usersDb[0].id : usersDb[1].id
     }))
   })
-  // console.log(initialData.users)
+
+  const rafflesDb = await prisma.raffle.findMany()
+  const participants = rafflesDb.map((raffle, ind) => ({
+    userId: ind === 1 ? usersDb[0].id : usersDb[1].id,
+    raffleId: raffle.id,
+  }))
+  console.log(participants)
+  await prisma.participant.createMany({
+    data: participants
+  })
   console.log('seed ejecutado con éxito')
 }
 

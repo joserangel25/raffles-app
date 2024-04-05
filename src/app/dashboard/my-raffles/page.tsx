@@ -1,7 +1,14 @@
-import { Button, CardRaffle } from "@/components";
-import Link from "next/link";
+export const revalidate = 0
 
-export default function MyRafflesPage() {
+import Link from "next/link";
+import { CardRaffle } from "@/components";
+import { getServerSession } from "next-auth";
+import { authConfig } from "@/app/api/auth/[...nextauth]/route";
+import { getRaffles } from "@/actions";
+
+export default async function MyRafflesPage() {
+  const session = await getServerSession(authConfig)
+  const raffles = await getRaffles(session!.user.id)
   return (
     <div>
       <div className="w-full flex flex-col gap-3 sm:flex-row justify-between">
@@ -15,9 +22,15 @@ export default function MyRafflesPage() {
       </div>
 
       <ul className="w-full flex flex-wrap gap-7 sm:gap-2 md:gap-5 my-5">
+        {/* {
+          session?.user.myRaffles?.map(raffle => (
+            <CardRaffle key={raffle.id} raffle={raffle} />
+          ))
+        } */}
+
         {
-          Array.from({ length: 2 }, (v, i) => (
-            <CardRaffle key={i} />
+          raffles?.map(raffle => (
+            <CardRaffle key={raffle.id} raffle={raffle} />
           ))
         }
       </ul>

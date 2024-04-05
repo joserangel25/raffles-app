@@ -1,25 +1,48 @@
 'use client'
 
 import { useState } from "react"
+import { createNewRaffle } from "@/actions";
+import { notify } from "@/utils";
+import { SubmitHandler, useForm } from "react-hook-form"
+import { useRouter } from "next/navigation";
 
+type InputsForm = {
+  title: string;
+  description: string;
+  maxParticipants: number | null;
+}
 
 export const NewRaffleForm = () => {
   const [showLimitNumber, setShowLimitNumber] = useState(false)
   const [showEndDateToInscription, setShowEndDateToInscription] = useState(false)
+  const router = useRouter()
+
+  const { handleSubmit, register, formState } = useForm<InputsForm>()
+
+  const onSubmitFormNewRaffle: SubmitHandler<InputsForm> = async (data) => {
+    const raffle = { ...data, maxParticipants: showLimitNumber ? Number(data.maxParticipants) : null }
+    const { ok } = await createNewRaffle(raffle)
+
+    if (!ok) {
+      notify({ type: 'error', message: 'Error en la creación' })
+    }
+    notify({ type: 'success', message: 'Nuevo sorteo creado!' })
+    router.push('/dashboard/my-raffles')
+  }
   return (
     <form
-      // onSubmit={handleSubmit(onSubmitLogin)} 
+      onSubmit={handleSubmit(onSubmitFormNewRaffle)}
       className="space-y-4  w-full md:w-[400px] md:mx-auto  text-sm"
     >
       <div className="flex flex-col gap-1 ">
-        <label htmlFor="name" className="text-sm pl-3 font-semibold">Nombre</label>
+        <label htmlFor="title" className="text-sm pl-3 font-semibold">Nombre</label>
         <input
           type="text"
-          id="name"
+          id="title"
           required
           className="input-base"
           placeholder="Gran rifa millonaria"
-        // {...register('email', { required: true, pattern: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/ })}
+          {...register('title', { required: true })}
         />
       </div>
 
@@ -31,7 +54,8 @@ export const NewRaffleForm = () => {
           required
           className="input-base"
           placeholder="Será una rija maravillosa"
-        // {...register('email', { required: true, pattern: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/ })}
+          {...register('description', { required: true })}
+
         />
       </div>
 
@@ -62,7 +86,11 @@ export const NewRaffleForm = () => {
 
           {
             showLimitNumber && (
-              <input type="number" className="w-20 input-base  fade-in" />
+              <input
+                type="number"
+                className="w-20 input-base  fade-in"
+                {...register('maxParticipants', { required: showLimitNumber })}
+              />
             )
           }
         </div>
@@ -81,14 +109,14 @@ export const NewRaffleForm = () => {
 
           {
             showEndDateToInscription && (
-              <input type="date" className="w-30 pr-2 text-white input-base fade-in text-sm" />
+              <input type="date" onChange={e => console.log(e.target.value)} className="w-30 pr-2 text-white input-base fade-in text-sm" />
             )
           }
         </div>
       </div>
 
       <button
-        // type="submit"
+        type="submit"
         className="btn btn-secondary font-medium mx-auto block"
       >
         Crear
