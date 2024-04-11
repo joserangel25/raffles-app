@@ -22,13 +22,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <main
           // className="min-h-screen bg-[var(--color-primary)]  min-w-full grid grid-rows-[auto,1fr,60px] "
-          className="min-h-screen bg-[var(--color-primary)]  min-w-full flex flex-col"
+          className="min-h-screen bg-primary min-w-full flex flex-col"
         >
           <Provider>
             <Navbar />
-            <section
-              className="grow text-white lg:max-w-6xl md:mx-auto"
-            >
+            <section className="grow text-white lg:max-w-6xl md:mx-auto">
               {children}
 
               <ToastContainer

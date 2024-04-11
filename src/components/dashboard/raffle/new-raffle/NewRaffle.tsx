@@ -27,7 +27,9 @@ export const NewRaffleForm = () => {
       notify({ type: 'error', message: 'Error en la creación' })
     }
     notify({ type: 'success', message: 'Nuevo sorteo creado!' })
-    router.push('/dashboard/my-raffles')
+    setTimeout(() => {
+      window.location.replace('/dashboard/my-raffles')
+    }, 1500);
   }
   return (
     <form

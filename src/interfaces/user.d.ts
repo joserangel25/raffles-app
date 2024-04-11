@@ -1,4 +1,4 @@
-import { IRaffle } from "./raffle";
+import { IParticipant, IRaffle } from "./raffle";
 
 export interface IUser {
   name: string;
@@ -13,11 +13,4 @@ export interface IUser {
 export interface IUserFull extends IUser {
   myRaffles: IRaffle[];
   participateRaffles: IParticipant[]
-}
-
-
-
-export interface IParticipant {
-  userId: string;
-  raffleId: string;
 }

@@ -13,7 +13,6 @@ interface Props {
 
 export const createNewUser = async ({ email, name, image = '', password = '', discordId = '' }: Props) => {
   try {
-
     const existUser = await prisma.user.findUnique({
       where: { email },
       select: {
@@ -22,7 +21,9 @@ export const createNewUser = async ({ email, name, image = '', password = '', di
         email: true,
         image: true,
         discordId: true,
-        myRaffles: true,
+        myRaffles: {
+          include: { participants: true }
+        },
         participateRaffles: true
       }
     })
@@ -39,7 +40,9 @@ export const createNewUser = async ({ email, name, image = '', password = '', di
         email: true,
         image: true,
         discordId: true,
-        myRaffles: true,
+        myRaffles: {
+          include: { participants: true }
+        },
         participateRaffles: true
       }
     })

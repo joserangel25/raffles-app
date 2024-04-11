@@ -3,6 +3,7 @@ import { create } from "zustand";
 type ContentModal =
   | ''
   | 'add-moderator'
+  | 'participate-in-raffle'
 
 interface State {
   openModal: boolean;

@@ -15,6 +15,7 @@ declare module "next-auth/jwt" {
 declare module 'next-auth' {
   interface Session {
     accessToken: string;
+    isDevtallesUser?: booelean;
     user: IUserFull
     // & DefaultSession['user']
   }

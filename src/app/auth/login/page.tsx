@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function LoginPage() {
 
   return (
-    <div className="grid place-content-center w-full h-full">
+    <div className="py-3 lg:pt-10 grid place-content-center ">
       <h1 className="text-white font-bold text-3xl mb-5 text-center">Iniciar sesión</h1>
       <LoginForm />
 

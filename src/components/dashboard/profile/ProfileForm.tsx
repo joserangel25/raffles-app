@@ -25,9 +25,9 @@ export const ProfileForm = () => {
     <form
       className="space-y-4 lg:space-y-0 w-full md:w-[400px] lg:w-[620px] lg:grid lg:grid-cols-2 lg:gap-3 text-sm"
     >
-      <pre>
+      {/* <pre>
         {JSON.stringify(session?.user, null, 2)}
-      </pre>
+      </pre> */}
       <div className="flex flex-col gap-1 ">
         <label htmlFor="name" className="text-sm pl-3 font-semibold">Nombre</label>
         <input

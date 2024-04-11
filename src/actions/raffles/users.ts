@@ -1,16 +1,17 @@
 'use server'
 
-import { authConfig } from "@/app/api/auth/[...nextauth]/route"
 import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
+import { authConfig } from "@/app/api/auth/[...nextauth]/route"
+import { ENV } from "@/env"
 
-const checkIsSameUser = async (id: string) => {
+const checkIsSameUser = async (id: string, raffleId: string) => {
   const session = await getServerSession(authConfig)
 
   if (!session) {
     throw new Error("Debes iniciar sesión para poder hacer esta solicitud.");
   }
-  if (session.user.id === id) {
+  if (session.user.id === raffleId) {
     throw new Error("No te puedes agregar como moderador a tu propia rifa.");
   }
 }
@@ -39,7 +40,7 @@ interface PropsToogleUserRaffle {
 export const toogleUserInRaffle = async ({ userId, raffleId, role = 'player' }: PropsToogleUserRaffle) => {
   try {
 
-    await checkIsSameUser(userId)
+    await checkIsSameUser(userId, raffleId)
 
     const userRafflesParticipate = await prisma.participant.findMany({ where: { userId } })
     const [participantExist] = userRafflesParticipate.filter(raffle => raffle.raffleId === raffleId)
@@ -58,11 +59,13 @@ export const toogleUserInRaffle = async ({ userId, raffleId, role = 'player' }: 
   }
 }
 
+// TODO: eliminar funcion toogleUserInRaffle y donde se llama, usar los métodos de crear o eliminar usuarios por separado
+
 const createUserInRaffle = async ({ userId, raffleId, role }: PropsToogleUserRaffle) => {
   await prisma.participant.create({ data: { userId, raffleId, role } })
   return {
     ok: true,
-    message: `${role === 'player' ? 'Jugador' : 'Moderador'} agregado con éxito.`
+    message: `${role === 'player' ? 'Jugador te has' : 'Moderador se ha'} registrado con éxito.`
   }
 }
 
@@ -72,4 +75,31 @@ const deleteUserInRaffle = async (id: string) => {
     ok: true,
     message: 'Moderador eliminado con éxito.'
   }
+}
+
+export const findUserRegistered = async (email: string) => {
+  return await prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+      discordId: true,
+      myRaffles: {
+        include: { participants: true }
+      },
+      participateRaffles: true
+    }
+  })
+}
+
+export const isRegisterInServerDiscord = async (token: string) => {
+  const res = await fetch(`https://discord.com/api/users/@me/guilds`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  const serversUser: { id: string, name: string }[] = await res.json()
+  return serversUser.some(server => server.id === ENV.DISCORD_ID_SERVER)
 }

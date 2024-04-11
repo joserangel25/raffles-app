@@ -3,8 +3,12 @@ import Credentials from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
 import z from "zod"
 
-import { checkIsUserRegistered, verifyUserWithEmailAndPassword } from "@/database";
-import { createNewUser } from "@/actions";
+import {
+  checkIsUserRegistered,
+  isRegisterInServerDiscord,
+  verifyUserWithEmailAndPassword
+} from "@/database";
+import { createNewUser, findUserRegistered } from "@/actions";
 import { ENV } from "@/env";
 import { IUserFull } from "@/interfaces/user";
 
@@ -89,14 +93,20 @@ export const authConfig: NextAuthOptions = {
         switch (account.type) {
           case 'oauth':
 
-            const newUser = await createNewUser({
-              name: user.name!,
-              email: user.email!,
-              discordId: user.id,
-              image: user.image!
-            })
+            const existUser = await findUserRegistered(user.email!)
+            let newUser;
+            if (!existUser) {
+              newUser = await createNewUser({
+                name: user.name!,
+                email: user.email!,
+                discordId: user.id,
+                image: user.image!
+              })
+              // token.user = newUser
+            }
+
+            token.user = existUser ? existUser as IUserFull : newUser as IUserFull
             // token.isDevtallesUser = await isRegisterInServerDiscord(account.access_token!)
-            token.user = newUser
             break;
 
           case 'credentials':
@@ -112,6 +122,9 @@ export const authConfig: NextAuthOptions = {
       // if (token) {
       session.accessToken = token.accessToken
       session.user = token.user
+      // if (token.isDevtallesUser) {
+      //   session.isDevtallesUser = token.isDevtallesUser
+      // }
       // }
       return session
     }
