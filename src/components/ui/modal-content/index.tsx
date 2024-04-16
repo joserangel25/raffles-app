@@ -2,6 +2,7 @@
 import { useModalStore } from "@/store";
 import { AddModerator } from "./AddModerator";
 import { ParticipateInRaffle } from "./ParticipateInRaffle";
+import { PlayRaffle } from "./PlayRaffle";
 
 
 export const ContentModal = () => {
@@ -14,6 +15,10 @@ export const ContentModal = () => {
     case 'participate-in-raffle':
       return (
         <ParticipateInRaffle />
+      );
+    case 'play-raffle':
+      return (
+        <PlayRaffle />
       )
     default:
       <></>

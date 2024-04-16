@@ -56,11 +56,11 @@ export const AddModerator = () => {
     <div >
       <form
         onSubmit={handleSubmit(onSubmitForm)}
-        className="flex gap-2"
+        className="flex gap-2 text-white"
         autoComplete="off"
       >
         <div className="flex flex-col gap-1 ">
-          <label htmlFor="email" className="text-sm pl-3 font-semibold">Correo del usuario</label>
+          <label htmlFor="email" className="text-sm text-secondary pl-3 font-semibold">Correo del usuario</label>
           <input
             type="email"
             autoFocus

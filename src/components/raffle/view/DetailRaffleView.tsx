@@ -1,16 +1,18 @@
-import Image from "next/image"
 import Link from "next/link"
-import { UserCard } from "@/components/ui/list-users/UserCard"
-import { ButtonAddModerator } from "../ButtonAddModerator"
-import { StatusRaffle } from "../StatusRaffle"
-import { IRaffle } from "@/interfaces/raffle"
+import Image from "next/image"
 import { getServerSession } from "next-auth"
 import { authConfig } from "@/app/api/auth/[...nextauth]/route"
+
+import { StatusRaffle } from "../StatusRaffle"
+import { ButtonAction } from "../ButtonAction"
+import { ModeratorCart } from "@/components/ui/list-users/ModeratorCard"
 import { ButtonPartitipate } from "../ButtonPartitipate.client"
 
+import type { IRaffle } from "@/interfaces/raffle"
+import { AddUserIcon } from "@/components/ui/icons"
 
 interface Props {
-  raffle: IRaffle
+  raffle: IRaffle;
 }
 
 export const DetailRaffleView = async ({ raffle }: Props) => {
@@ -45,6 +47,12 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
 
       <div className="pb-0.5 bg-light rounded-lg w-[90%] mx-auto" />
 
+      {
+        isModerator && (
+          <p className="bg-light py-2 rounded-md mt-4 pl-3 text-secondary font-medium"> Esta rifa fue creada por: {raffle?.author?.name} </p>
+        )
+      }
+
       <div className="my-4">
         <div className="flex justify-between items-center">
           <div>
@@ -66,8 +74,16 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
             }
           </div>
 
-          <Link href={'#'} className="hover:underline">Ver participantes</Link>
+          {
+            (isAuthor || isModerator) &&
+            (<Link
+              href={{
+                pathname: `/dashboard/my-raffles/${raffle.id}/participants`,
+              }}
+              className="hover:underline">{raffle.winnerId ? 'Ver ganador' : 'Ver participantes'}</Link>)
+          }
         </div>
+
 
 
         {
@@ -77,7 +93,7 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
                 <h2 className="font-bold text-xl">Moderadores</h2>
 
                 {
-                  isAuthor && <ButtonAddModerator />
+                  (isAuthor && !raffle.played) && <ButtonAction action="add-moderator" icon={<AddUserIcon />} />
                 }
 
               </div>
@@ -85,7 +101,7 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
                 {
                   moderators?.length ?
                     moderators?.map(participant => (
-                      <UserCard key={participant.id} user={participant.user!} />
+                      <ModeratorCart key={participant.id} user={participant.user!} isModerator={isModerator} />
                     )) : (
                       <p className="text-sm">No se han agregado.</p>
                     )
@@ -96,14 +112,20 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
         }
 
         {
-          (!isAuthor && !isModerator && !isPlayer) && (
+          (!isAuthor && !isModerator && !isPlayer && !raffle.played) && (
             <ButtonPartitipate session={session} />
           )
         }
 
         {
-          isPlayer && (
-            <p className="bg-green-200 px-3 py-2 text-secondary mt-2 font-bold text-center">¡¡Ya estás participando!!</p>
+          (isPlayer) && (
+            <p
+              className={`${raffle.played ? 'bg-light' : 'bg-green-200'} rounded-md px-3 py-2 text-secondary mt-2 font-bold text-center`}
+            >
+              {
+                !raffle.played ? '¡¡Ya estás participando!!' : 'Lo sentimos, no fuiste el ganador.'
+              }
+            </p>
           )
         }
       </div>

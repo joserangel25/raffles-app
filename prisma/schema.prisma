@@ -22,6 +22,7 @@ model User {
   discordId          String        @default("")
   myRaffles          Raffle[]
   participateRaffles Participant[]
+  // winners            Raffle[]
 }
 
 model Raffle {
@@ -37,23 +38,14 @@ model Raffle {
   author       User          @relation(fields: [authorId], references: [id])
   authorId     String
   participants Participant[]
+  // winner User @relation((fields: [winnerId], references: [id]))
+  winnerId     String        @default("")
 }
 
 enum Role {
   player
   moderator
 }
-
-// model Participant {
-//   id       String @id @unique @default(uuid())
-//   user     User   @relation(fields: [userId], references: [id])
-//   userId   String
-//   raffle   Raffle @relation(fields: [raffleId], references: [id])
-//   raffleId String @id
-//   role     Role   @default(player)
-
-//   // @@unique([userId])
-// }
 
 model Participant {
   id       String @id @default(uuid())

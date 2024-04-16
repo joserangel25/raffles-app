@@ -1,4 +1,5 @@
 import { Padlock } from "../ui/icons"
+import { LockClosedIcon } from "../ui/icons/LockClosed"
 
 interface Props {
   played: boolean
@@ -6,11 +7,13 @@ interface Props {
 
 export const StatusRaffle = ({ played }: Props) => {
   return (
-    <span className="flex gap-2 font-semibold text-md">
-      <Padlock />
+    <p className="flex gap-2 font-semibold text-md">
+      {
+        played ? <LockClosedIcon /> : <Padlock />
+      }
       {
         played ? '¡Sorteado!' : '¡Por jugar!'
       }
-    </span>
+    </p>
   )
 }

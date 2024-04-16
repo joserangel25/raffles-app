@@ -16,13 +16,10 @@ export default async function DetailRafflePage({ params }: Props) {
     notFound()
   }
 
-  const moderators = raffle?.participants.filter(user => user.role === 'moderator')
-  const isAuthor = raffle.authorId === session?.user?.id
-  const isModerator = moderators.some(participant => participant.userId === session?.user?.id)
+  const imParticipanting = raffle?.participants.some(user => user.userId === session?.user.id)
 
-
-  if (!isAuthor && !isModerator) {
-    redirect('/dashboard/my-raffles')
+  if (!imParticipanting) {
+    redirect('/dashboard/im-playing')
   }
   return (
     <DetailRaffleView

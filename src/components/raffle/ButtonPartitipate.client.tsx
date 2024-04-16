@@ -83,7 +83,7 @@ export const ButtonPartitipate = ({ session }: Props) => {
     if (onLoadedPage) {
       onEffectRegisterPlayerinRaffle()
     }
-  }, [session, onLoadedPage, raffleId])
+  }, [session, onLoadedPage, raffleId, router])
 
 
   return (

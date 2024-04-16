@@ -12,6 +12,8 @@ export interface IRaffle {
   image: string | null;
   played: boolean
   authorId: string;
+  author?: { name: string }
+  winnerId: string;
 }
 
 export interface IParticipant {
@@ -20,4 +22,10 @@ export interface IParticipant {
   raffleId: string;
   role: IRoleParticipant
   user?: IUser
+}
+
+export interface IWinner {
+  id: string;
+  name: string;
+  email: string;
 }

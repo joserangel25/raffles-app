@@ -1,9 +1,10 @@
 import { create } from "zustand";
 
-type ContentModal =
+export type ContentModal =
   | ''
   | 'add-moderator'
   | 'participate-in-raffle'
+  | 'play-raffle'
 
 interface State {
   openModal: boolean;

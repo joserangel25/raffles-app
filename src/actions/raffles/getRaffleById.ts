@@ -1,9 +1,10 @@
 'use server'
 
-import { IRaffle } from "@/interfaces/raffle"
 import prisma from "@/lib/prisma"
+import { IRaffle } from "@/interfaces/raffle"
 
 export const getRaffleById = async (id: string): Promise<IRaffle | null> => {
+
   try {
     const raffle = await prisma.raffle.findFirst({
       where: { id },
@@ -20,6 +21,9 @@ export const getRaffleById = async (id: string): Promise<IRaffle | null> => {
               }
             }
           }
+        },
+        author: {
+          select: { name: true }
         }
       }
     })
