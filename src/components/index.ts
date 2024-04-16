@@ -6,6 +6,7 @@ export * from './ui/list-users/ModeratorCard'
 export * from './ui/modal/Modal'
 export * from './ui/button-back/ButtonBack'
 export * from './ui/icons'
+export * from './ui/pagination/Pagination'
 
 
 export * from './auth/LoginForm'

@@ -1,40 +1,84 @@
 'use server'
 
 import prisma from "@/lib/prisma"
+import type { IRaffle } from "@/interfaces/raffle";
+
+type Role = 'moderator' | 'player'
 
 interface Props {
   id: string;
-  typeUser: 'administrator' | 'player'
+  role: Role;
+  page?: number;
+  take?: number;
 }
 
-export const getRaffles = async ({ id, typeUser }: Props) => {
+interface Response {
+  raffles: IRaffle[];
+  totalPages: number;
+  currentPage: number;
+}
+
+export const getRaffles = async ({ id, role, page = 1, take = 2 }: Props): Promise<Response> => {
+
+  if (isNaN(page) || page < 1) page = 1
+
   try {
     const raffles = await prisma.raffle.findMany({
-      // where: { authorId: id },
-      include: { participants: true }
+      take,
+      skip: (page - 1) * take,
+      include: { participants: true },
+      where: {
+        OR: [
+          {
+            authorId: id
+          },
+          {
+            participants: {
+              some: {
+                userId: id,
+                role
+              }
+            }
+          }
+        ]
+      },
+      // orderBy: {
+
+      // }
     })
 
-    if (typeUser === 'administrator') {
-      const myRaffles = raffles.filter(raffle => raffle.authorId === id)
-      const ImModerator = raffles.filter(raffle => {
-        if (raffle.participants.some(user => user.userId === id && user.role === 'moderator')) {
-          return true
-        }
-        return false
-      })
-      return [...myRaffles, ...ImModerator]
-    }
+    const totalRafflesDb = await prisma.raffle.findMany({
+      include: { participants: true },
+      where: {
+        OR: [
+          {
+            authorId: id
+          },
+          {
+            participants: {
+              some: {
+                userId: id,
+                role
+              }
+            }
+          }
+        ]
+      }
+    })
+    const totalPages = Math.ceil(totalRafflesDb.length / take)
 
-    if (typeUser === 'player') {
-      return raffles.filter(raffle => {
-        if (raffle.participants.some(user => user.userId === id && user.role === 'player')) {
-          return true
-        }
-        return false
-      })
+    return {
+      raffles,
+      totalPages,
+      currentPage: page
     }
 
   } catch (error) {
     console.log(error)
+    return {
+      raffles: [],
+      totalPages: 0,
+      currentPage: 0
+    }
   }
 }
