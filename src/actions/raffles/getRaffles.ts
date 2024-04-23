@@ -23,36 +23,16 @@ export const getRaffles = async ({ id, role, page = 1, take = 2 }: Props): Promi
   if (isNaN(page) || page < 1) page = 1
 
   try {
-    const raffles = await prisma.raffle.findMany({
-      take,
-      skip: (page - 1) * take,
-      include: { participants: true },
-      where: {
-        OR: [
-          {
-            authorId: id
-          },
-          {
-            participants: {
-              some: {
-                userId: id,
-                role
-              }
-            }
-          }
-        ]
-      },
-      // orderBy: {
-
-      // }
-    })
+    const raffles = role === 'moderator'
+      ? await getRafflesAdmin(id, take, page)
+      : await getRafflesParticipate(id, take, page)
 
     const totalRafflesDb = await prisma.raffle.findMany({
       include: { participants: true },
       where: {
         OR: [
           {
-            authorId: id
+            authorId: role === 'moderator' ? id : ''
           },
           {
             participants: {
@@ -65,6 +45,7 @@ export const getRaffles = async ({ id, role, page = 1, take = 2 }: Props): Promi
         ]
       }
     })
+
     const totalPages = Math.ceil(totalRafflesDb.length / take)
 
     return {
@@ -81,4 +62,43 @@ export const getRaffles = async ({ id, role, page = 1, take = 2 }: Props): Promi
       currentPage: 0
     }
   }
+}
+
+const getRafflesAdmin = async (id: string, take: number, page: number) => {
+  return await prisma.raffle.findMany({
+    take,
+    skip: (page - 1) * take,
+    include: { participants: true, _count: true },
+    where: {
+      OR: [
+        {
+          authorId: id
+        },
+        {
+          participants: {
+            some: {
+              userId: id,
+              role: 'moderator'
+            }
+          }
+        }
+      ]
+    },
+  })
+}
+
+const getRafflesParticipate = async (id: string, take: number, page: number) => {
+  return await prisma.raffle.findMany({
+    take,
+    skip: (page - 1) * take,
+    include: { participants: true },
+    where: {
+      participants: {
+        some: {
+          userId: id,
+          role: 'player'
+        }
+      }
+    },
+  })
 }

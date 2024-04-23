@@ -3,12 +3,28 @@ export const revalidate = 0
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/app/api/auth/[...nextauth]/route";
-import { CardRaffle } from "@/components";
+import { CardRaffle, Pagination } from "@/components";
 import { getRaffles } from "@/actions";
+import { redirect } from "next/navigation";
 
-export default async function ImPlayingRaffles() {
+interface Props {
+  searchParams?: { page: string }
+}
+
+export default async function ImPlayingRaffles({ searchParams }: Props) {
   const session = await getServerSession(authConfig)
-  const raffles = await getRaffles({ id: session!.user.id, typeUser: 'player' })
+  const page = Number(searchParams?.page) ?? 1
+  const { currentPage, totalPages, raffles } = await getRaffles({
+    id: session!.user.id,
+    role: 'player',
+    page: page
+  })
+
+  if (page !== 1 && !raffles.length) {
+    redirect('/dashboard/im-playing?page=1')
+  }
+
+
   return (
     <div>
       <div className="w-full flex flex-col gap-3 sm:flex-row justify-between">
@@ -32,6 +48,13 @@ export default async function ImPlayingRaffles() {
             )
         }
       </ul>
+
+      {
+        Boolean(raffles.length) && (
+          <Pagination currentPage={currentPage} totalPages={totalPages} />
+        )
+      }
+
     </div>
   );
 }

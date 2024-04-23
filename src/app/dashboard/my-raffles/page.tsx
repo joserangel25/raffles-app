@@ -21,7 +21,7 @@ export default async function MyRafflesPage({ searchParams }: Props) {
     page: page
   })
 
-  if (!raffles.length) {
+  if (page !== 1 && !raffles.length) {
     redirect('/dashboard/my-raffles?page=1')
   }
 
@@ -48,7 +48,11 @@ export default async function MyRafflesPage({ searchParams }: Props) {
         }
       </ul>
 
-      <Pagination currentPage={currentPage} totalPages={totalPages} />
+      {
+        Boolean(raffles.length) && (
+          <Pagination currentPage={currentPage} totalPages={totalPages} />
+        )
+      }
     </div>
   );
 }

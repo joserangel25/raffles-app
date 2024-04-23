@@ -5,7 +5,7 @@ import { LINKS_SIDEBAR } from "@/constants"
 
 export const Sidebar = () => {
   return (
-    <aside className='bg-secondary h-full w-full rounded-xl py-3 '>
+    <aside className='bg-secondary grow h-full w-full rounded-xl py-3 '>
       <Image
         src={'/images/devi/wink.webp'}
         alt="Icono de Devi en el sidebar"

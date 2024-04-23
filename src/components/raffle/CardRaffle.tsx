@@ -20,56 +20,58 @@ export const CardRaffle = ({ raffle, session = null }: Props) => {
 
 
   return (
-    <li className={`w-full lg:w-[300px]  p-4 list-none  rounded-lg space-y-3 justify-self-center text-sm ${raffle.played ? 'bg-secondary text-white' : 'bg-light text-primary'}`}>
-      <p className=" font-bold text-xl underline text-center">{raffle.title}</p>
+    <li className={`w-full lg:w-[300px] lg:min-h-[336px] p-4 list-none rounded-lg space-y-3 flex flex-col justify-self-center text-sm ${raffle.played ? 'bg-secondary text-white' : 'bg-light text-primary'}`}>
+      <p className=" font-bold text-xl underline text-center uppercase">{raffle.title}</p>
 
-      <div className="flex gap-3 items-center ">
-        <CalendarIcon />
-        <div>
-          <p className=" font-semibold">Cierre de inscripción</p>
-          <p className=" font-bold">14 de enero de 2024</p>
-        </div>
-      </div>
-
-      <div className="flex gap-3 items-center">
-        <UsersGroup />
-        {
-          raffle.maxParticipants ? (
-            <>
-              <p className=" font-semibold">Límite de usuarios</p>
-              <p className=" font-bold">{raffle.maxParticipants}</p>
-            </>
-          ) : (
-            <p className=" font-semibold">Sin límite de usuarios</p>
-          )
-        }
-      </div>
-
-      <div className="flex gap-3 items-center">
-        <UsersGroup />
-        {
-          participants?.length ? (
-            <div>
-              <p className=" font-semibold">Usuarios participando</p>
-              <p className=" font-bold">{participants?.length}</p>
-            </div>
-          ) : (
-            <p className=" font-semibold">No hay participantes</p>
-          )
-        }
-      </div>
-
-      <StatusRaffle played={raffle.played} />
-
-      {
-        (isAuthor || isModerator) && (
-          <div className="flex gap-3  font-medium items-center">
-            <UserIcon />
-            {isAuthor && 'Administrador'}
-            {isModerator && 'Moderador'}
+      <div className="grow space-y-3">
+        <div className="flex gap-3 items-center ">
+          <CalendarIcon />
+          <div>
+            <p className=" font-semibold">Cierre de inscripción</p>
+            <p className=" font-bold">14 de enero de 2024</p>
           </div>
-        )
-      }
+        </div>
+
+        <div className="flex gap-3 items-center">
+          <UsersGroup />
+          {
+            raffle.maxParticipants ? (
+              <>
+                <p className=" font-semibold">Límite de usuarios</p>
+                <p className=" font-bold">{raffle.maxParticipants}</p>
+              </>
+            ) : (
+              <p className=" font-semibold">Sin límite de usuarios</p>
+            )
+          }
+        </div>
+
+        <div className="flex gap-3 items-center">
+          <UsersGroup />
+          {
+            participants?.length ? (
+              <div>
+                <p className=" font-semibold">Usuarios participando</p>
+                <p className=" font-bold">{participants?.length}</p>
+              </div>
+            ) : (
+              <p className=" font-semibold">No hay participantes</p>
+            )
+          }
+        </div>
+
+        <StatusRaffle played={raffle.played} />
+
+        {
+          (isAuthor || isModerator) && (
+            <div className="flex gap-3  font-medium items-center">
+              <UserIcon />
+              {isAuthor && 'Administrador'}
+              {isModerator && 'Moderador'}
+            </div>
+          )
+        }
+      </div>
 
       <LinkDetailsRaffle id={raffle.id} />
     </li>

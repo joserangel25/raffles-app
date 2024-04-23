@@ -6,6 +6,7 @@ import type { Player } from "@/interfaces/player"
 import { showConfetti } from "@/utils"
 import { useParamsRaffle } from "@/hooks"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
 export const PlayRaffle = () => {
   const { raffleId } = useParamsRaffle()
@@ -59,7 +60,14 @@ export const PlayRaffle = () => {
           <div className='w-48 h-48 bg-primary text-white text-7xl font-bold rounded-full grid place-content-center'>{count}</div>
         ) : (
           <div className="text-center">
-            <p>El ganador es:</p>
+            <Image
+              src={'/images/devi/yay.webp'}
+              alt="Icono de devi celebrando"
+              height={100}
+              width={150}
+              className="mx-auto mb-2"
+            />
+            <p className="font-medium text-lg">El ganador es:</p>
             <p className="font-bold text-2xl uppercase">{winner?.name}</p>
             <p className="font-semibold text-lg">{winner?.email}</p>
           </div>
