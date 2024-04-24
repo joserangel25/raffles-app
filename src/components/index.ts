@@ -15,6 +15,8 @@ export * from './auth/ButtonDiscord'
 
 export * from './provider/Provider'
 
+export * from './public/LastRaffles'
+
 export * from './dashboard/'
 
 export * from './raffle/CardRaffle'

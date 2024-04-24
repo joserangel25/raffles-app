@@ -102,3 +102,15 @@ const getRafflesParticipate = async (id: string, take: number, page: number) => 
     },
   })
 }
+
+export const getLastRafflesPublic = async (): Promise<IRaffle[]> => {
+  return await prisma.raffle.findMany({
+    where: {
+      played: false
+    },
+    include: {
+      participants: true
+    },
+    take: 6
+  })
+}

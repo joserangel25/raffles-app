@@ -9,10 +9,10 @@ interface Props {
 
 export const LinkDetailsRaffle = ({ id }: Props) => {
   const pathname = usePathname()
-
+  const urlBase = pathname === '/' ? '/raffles' : pathname
   return (
     <Link
-      href={`${pathname}/${id}`}
+      href={`${urlBase}/${id}`}
       className="block btn btn-primary">Detalles</Link>
   )
 }

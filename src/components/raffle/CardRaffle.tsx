@@ -9,9 +9,10 @@ import { LinkDetailsRaffle } from "./LinkDetailsRaffle"
 interface Props {
   raffle: IRaffle
   session?: Session | null
+  className?: string;
 }
 
-export const CardRaffle = ({ raffle, session = null }: Props) => {
+export const CardRaffle = ({ raffle, className, session = null }: Props) => {
 
   const participants = raffle.participants?.filter(participant => participant.role !== 'moderator')
   const moderators = raffle.participants?.filter(participant => participant.role === 'moderator')
@@ -20,7 +21,7 @@ export const CardRaffle = ({ raffle, session = null }: Props) => {
 
 
   return (
-    <li className={`w-full lg:w-[300px] lg:min-h-[336px] p-4 list-none rounded-lg space-y-3 flex flex-col justify-self-center text-sm ${raffle.played ? 'bg-secondary text-white' : 'bg-light text-primary'}`}>
+    <li className={`w-full lg:w-[300px] lg:min-h-[336px] p-4 list-none rounded-lg space-y-3 flex flex-col justify-self-center text-sm ${className} ${raffle.played ? 'bg-secondary text-white' : 'bg-light text-primary'}`}>
       <p className=" font-bold text-xl underline text-center uppercase">{raffle.title}</p>
 
       <div className="grow space-y-3">

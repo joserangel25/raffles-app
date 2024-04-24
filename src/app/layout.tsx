@@ -26,7 +26,7 @@ export default function RootLayout({
         >
           <Provider>
             <Navbar />
-            <section className="grow text-white lg:max-w-6xl md:mx-auto">
+            <section className="grow text-white lg:max-w-6xl md:mx-auto container">
               {children}
 
               <ToastContainer
