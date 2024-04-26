@@ -28,7 +28,7 @@ export const checkIsUserRegistered = async (email: string, withPassword = false)
       image: true,
       password: withPassword,
       discordId: true,
-      myRaffles: true,
+      // myRaffles: true,
       participateRaffles: true
     }
   })

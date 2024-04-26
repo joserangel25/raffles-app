@@ -30,6 +30,7 @@ export const authConfig: NextAuthOptions = {
         password: { label: "Contraseña", type: "password", placeholder: '******' }
       },
       async authorize(credentials, req) {
+        console.log({ credentials })
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);

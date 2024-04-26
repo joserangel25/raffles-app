@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { searchUserByEmail, toogleUserInRaffle } from "@/actions";
+import { createUserInRaffle, searchUserByEmail } from "@/actions";
 import { useModalStore } from "@/store";
 import { notify } from "@/utils";
 import { useParamsRaffle } from "@/hooks";
@@ -36,7 +36,7 @@ export const AddModerator = () => {
 
   const addModeratorInRaffle = async () => {
     if (!userSearch) return
-    const { ok, message } = await toogleUserInRaffle({
+    const { ok, message } = await createUserInRaffle({
       userId: userSearch.id,
       raffleId: raffleId.toString(),
       role: 'moderator'

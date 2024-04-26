@@ -1,13 +1,13 @@
 'use client'
 
-import { isRegisterInServerDiscord, toogleUserInRaffle } from "@/actions"
+import { useEffect, useState } from "react"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { Session } from "next-auth"
 import { useParamsRaffle } from "@/hooks"
 import { useModalStore } from "@/store"
 import { notify } from "@/utils"
-import { Session } from "next-auth"
-import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
+import { createUserInRaffle, isRegisterInServerDiscord, } from "@/actions"
 
 interface Props {
   session: Session | null,
@@ -30,7 +30,7 @@ export const ButtonPartitipate = ({ session }: Props) => {
     if (session?.accessToken) {
       const discordGuildOk = await isRegisterInServerDiscord(session!.accessToken)
       if (discordGuildOk) {
-        const { ok, message } = await toogleUserInRaffle({
+        const { ok, message } = await createUserInRaffle({
           userId: session!.user.id,
           raffleId
         })
@@ -43,6 +43,9 @@ export const ButtonPartitipate = ({ session }: Props) => {
             message
           })
         }
+      } else {
+        console.log('no estás registrado')
+        notify({ type: 'warning', message: 'No puedes participar. No perteneces a la comunidad de discord.' })
       }
       changeParticipatedLS(false)
 
@@ -62,7 +65,7 @@ export const ButtonPartitipate = ({ session }: Props) => {
       if (participated && session?.accessToken) {
         const discordGuildOk = await isRegisterInServerDiscord(session!.accessToken)
         if (discordGuildOk) {
-          const { ok, message } = await toogleUserInRaffle({
+          const { ok, message } = await createUserInRaffle({
             userId: session!.user.id,
             raffleId
           })
@@ -76,8 +79,12 @@ export const ButtonPartitipate = ({ session }: Props) => {
               message
             })
           }
-          changeParticipatedLS(false)
+        } else {
+          console.log('no estás registrado en el server')
+          notify({ type: 'warning', message: 'No puedes participar. No perteneces a la comunidad de discord.' })
         }
+        changeParticipatedLS(false)
+
       }
     }
     if (onLoadedPage) {

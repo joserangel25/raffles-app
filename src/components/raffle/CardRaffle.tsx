@@ -5,6 +5,7 @@ import { CalendarIcon, UserIcon, UsersGroup } from "../ui/icons"
 import type { IRaffle } from "@/interfaces/raffle"
 import type { Session } from "next-auth"
 import { LinkDetailsRaffle } from "./LinkDetailsRaffle"
+import { formatDate } from "@/utils"
 
 interface Props {
   raffle: IRaffle
@@ -28,8 +29,8 @@ export const CardRaffle = ({ raffle, className, session = null }: Props) => {
         <div className="flex gap-3 items-center ">
           <CalendarIcon />
           <div>
-            <p className=" font-semibold">Cierre de inscripción</p>
-            <p className=" font-bold">14 de enero de 2024</p>
+            <p className=" font-semibold">¿Fecha máxima de registro?</p>
+            <p className=" font-bold">{raffle.endDate ? formatDate(raffle.endDate) : 'No tiene'}</p>
           </div>
         </div>
 

@@ -5,11 +5,12 @@ import { authConfig } from "@/app/api/auth/[...nextauth]/route"
 
 import { StatusRaffle } from "../StatusRaffle"
 import { ButtonAction } from "../ButtonAction"
-import { ModeratorCart } from "@/components/ui/list-users/ModeratorCard"
+import { ModeratorCard } from "@/components/ui/list-users/ModeratorCard"
 import { ButtonPartitipate } from "../ButtonPartitipate.client"
 
 import type { IRaffle } from "@/interfaces/raffle"
 import { AddUserIcon } from "@/components/ui/icons"
+import { formatDate } from "@/utils"
 
 interface Props {
   raffle: IRaffle;
@@ -56,8 +57,8 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
       <div className="my-4">
         <div className="flex justify-between items-center">
           <div>
-            {/* TODO: agregar endDate al modelo Raffle y poder leerlo */}
-            <p>Cierra inscripciones el: <span className="font-bold"> 15/04/2025</span></p>
+            <p className="inline">¿Fecha máxima de registro?</p>
+            <span className="font-bold ml-2">{raffle.endDate ? formatDate(raffle.endDate) : ' No tiene'}</span>
             {
               Boolean(participants?.length) ? (
                 <p>
@@ -101,7 +102,11 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
                 {
                   moderators?.length ?
                     moderators?.map(participant => (
-                      <ModeratorCart key={participant.id} user={participant.user!} isModerator={isModerator} />
+                      <ModeratorCard
+                        key={participant.id}
+                        idParticipant={participant.id}
+                        name={participant.user!.name}
+                        isModerator={isModerator} />
                     )) : (
                       <p className="text-sm">No se han agregado.</p>
                     )

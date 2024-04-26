@@ -30,7 +30,7 @@ model Raffle {
   title           String
   description     String
   maxParticipants Int?    @default(0)
-  // endDate         DateTime?
+  endDate         BigInt?
   image           String?
   played          Boolean @default(false)
 

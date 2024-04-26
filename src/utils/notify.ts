@@ -13,4 +13,8 @@ export const notify = ({ type = 'success', message }: Props) => {
   if (type === 'error') {
     toast.error(message)
   }
+
+  if (type === 'warning') {
+    toast.warning(message)
+  }
 }

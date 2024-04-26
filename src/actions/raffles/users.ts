@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { authConfig } from "@/app/api/auth/[...nextauth]/route"
 import { ENV } from "@/env"
+import { isTimeExpired } from "@/utils"
 
 const checkIsSameUser = async (id: string, raffleId: string) => {
   const session = await getServerSession(authConfig)
@@ -11,7 +12,7 @@ const checkIsSameUser = async (id: string, raffleId: string) => {
   if (!session) {
     throw new Error("Debes iniciar sesión para poder hacer esta solicitud.");
   }
-  if (session.user.id === raffleId) {
+  if (session.user.id === id) {
     throw new Error("No te puedes agregar como moderador a tu propia rifa.");
   }
 }
@@ -37,18 +38,53 @@ interface PropsToogleUserRaffle {
   role?: 'player' | 'moderator'
 }
 
-export const toogleUserInRaffle = async ({ userId, raffleId, role = 'player' }: PropsToogleUserRaffle) => {
-  try {
 
+export const createUserInRaffle = async ({ userId, raffleId, role = 'player' }: PropsToogleUserRaffle) => {
+
+  try {
     await checkIsSameUser(userId, raffleId)
 
-    const userRafflesParticipate = await prisma.participant.findMany({ where: { userId } })
-    const [participantExist] = userRafflesParticipate.filter(raffle => raffle.raffleId === raffleId)
+    const raffleDb = await prisma.raffle.findUnique({ where: { id: raffleId } })
 
-    if (participantExist) {
-      return await deleteUserInRaffle(participantExist.id)
-    } else {
-      return await createUserInRaffle({ userId, raffleId, role })
+    if (!raffleDb) {
+      return {
+        ok: false,
+        message: 'El Sorteo no existe ' + raffleId
+      }
+    }
+
+    if (raffleDb.played) {
+      return {
+        ok: false,
+        message: 'Ya esta rifa fue sorteada, no te puedes registrar.'
+      }
+    }
+
+    if (raffleDb.endDate && isTimeExpired(Number(raffleDb.endDate))) {
+      return {
+        ok: false,
+        message: 'No puedes participar en el sorteo. Ya cerró la fecha de inscripción.'
+      }
+    }
+
+    const isParticipanting = await prisma.participant.findMany({
+      where: {
+        userId,
+        raffleId
+      }
+    })
+
+    if (isParticipanting.length) {
+      return {
+        ok: false,
+        message: 'Ya estás registrado en este sorteo.'
+      }
+    }
+
+    await prisma.participant.create({ data: { userId, raffleId, role } })
+    return {
+      ok: true,
+      message: `Registro exitoso. ${role === 'player' ? '¡Ya estás participando!' : '¡Moderador agregado!'}`
     }
   } catch (error) {
     console.log(error)
@@ -57,23 +93,14 @@ export const toogleUserInRaffle = async ({ userId, raffleId, role = 'player' }: 
       message: (error as { message: string }).message
     }
   }
+
 }
 
-// TODO: eliminar funcion toogleUserInRaffle y donde se llama, usar los métodos de crear o eliminar usuarios por separado
-
-const createUserInRaffle = async ({ userId, raffleId, role }: PropsToogleUserRaffle) => {
-  await prisma.participant.create({ data: { userId, raffleId, role } })
+export const deleteUserInRaffle = async (idParticipant: string) => {
+  await prisma.participant.delete({ where: { id: idParticipant } })
   return {
     ok: true,
-    message: `${role === 'player' ? 'Jugador te has' : 'Moderador se ha'} registrado con éxito.`
-  }
-}
-
-const deleteUserInRaffle = async (id: string) => {
-  await prisma.participant.delete({ where: { id } })
-  return {
-    ok: true,
-    message: 'Moderador eliminado con éxito.'
+    message: 'Usuario eliminado con éxito.'
   }
 }
 

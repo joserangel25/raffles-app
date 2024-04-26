@@ -7,7 +7,7 @@ export interface IRaffle {
   title: string;
   description: string;
   maxParticipants: number | null;
-  // endDate: string;
+  endDate: bigint | null;
   participants: IParticipant[];
   image: string | null;
   played: boolean

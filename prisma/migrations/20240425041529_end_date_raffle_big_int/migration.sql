@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Raffle" ALTER COLUMN "endDate" SET DATA TYPE BIGINT;
