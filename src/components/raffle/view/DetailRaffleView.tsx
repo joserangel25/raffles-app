@@ -5,7 +5,7 @@ import { authConfig } from "@/app/api/auth/[...nextauth]/route"
 
 import { StatusRaffle } from "../StatusRaffle"
 import { ButtonAction } from "../ButtonAction"
-import { ModeratorCard } from "@/components/ui/list-users/ModeratorCard"
+import { ModeratorCard } from "@/components"
 import { ButtonPartitipate } from "../ButtonPartitipate.client"
 
 import type { IRaffle } from "@/interfaces/raffle"
