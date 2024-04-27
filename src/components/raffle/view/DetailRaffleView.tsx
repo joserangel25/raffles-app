@@ -30,10 +30,11 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
     <>
       <div className="te py-4 rounded-lg w-full flex flex-col lg:flex-row lg:justify-center gap-3 text-secondary">
         <Image
-          src={'/images/rifa.png'}
+          src={raffle.image ?? '/images/rifa.png'}
           alt="Rifa"
           width={400}
           height={300}
+          className="object-contain"
         />
 
         <div className="bg-light p-3 rounded-md lg:max-w-64 grid place-content-center text-center">

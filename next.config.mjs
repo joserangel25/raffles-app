@@ -9,6 +9,9 @@ const nextConfig = {
       {
         hostname: 'cdn.discordapp.com',
         protocol: 'https'
+      },
+      {
+        hostname: 'res.cloudinary.com',
       }
     ]
   }

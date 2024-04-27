@@ -77,7 +77,7 @@ export const createUserInRaffle = async ({ userId, raffleId, role = 'player' }: 
     if (isParticipanting.length) {
       return {
         ok: false,
-        message: 'Ya estás registrado en este sorteo.'
+        message: `Ya estás registrado en este sorteo como ${isParticipanting[0].role === 'player' ? 'jugador' : 'moderador'}.`
       }
     }
 

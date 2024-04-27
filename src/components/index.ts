@@ -26,3 +26,4 @@ export * from './raffle/view/DetailRaffleView'
 export * from './raffle/LinkDetailsRaffle'
 
 export * from './ui/list-users/PlayerCard'
+export * from './ui/widget-upload-images/WidgetUploadImages'

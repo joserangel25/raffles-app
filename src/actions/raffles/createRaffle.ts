@@ -16,7 +16,7 @@ export const createNewRaffle = async (data: CreateRaffle) => {
     throw new Error("No existe sesión de usuario activa. Inicie sesión");
   }
   try {
-    const raffle = await prisma.raffle.create({
+    await prisma.raffle.create({
       data: { ...data, authorId: session.user.id }
     })
 
