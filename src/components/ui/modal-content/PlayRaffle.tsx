@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { addWinnerInRaffle, getAllPlayers } from "@/actions"
 import type { Player } from "@/interfaces/player"
-import { showConfetti } from "@/utils"
+import { generateNumberWinner, showConfetti } from "@/utils"
 import { useParamsRaffle } from "@/hooks"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
@@ -29,7 +29,8 @@ export const PlayRaffle = () => {
   useEffect(() => {
     if (count <= 0) {
       setPlaying(false)
-      setWinner(players.current[0])
+      const positionWinner = generateNumberWinner(players.current.length - 1)
+      setWinner(players.current[positionWinner])
       return
     }
     if (loaded) {
