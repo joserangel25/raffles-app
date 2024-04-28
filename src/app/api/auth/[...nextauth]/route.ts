@@ -4,8 +4,6 @@ import DiscordProvider from "next-auth/providers/discord";
 import z from "zod"
 
 import {
-  checkIsUserRegistered,
-  isRegisterInServerDiscord,
   verifyUserWithEmailAndPassword
 } from "@/database";
 import { createNewUser, findUserRegistered } from "@/actions";
@@ -20,7 +18,6 @@ export const authConfig: NextAuthOptions = {
     signIn: '/auth/login',
     newUser: '/auth/register'
   },
-  // adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
 
     Credentials({
@@ -30,7 +27,6 @@ export const authConfig: NextAuthOptions = {
         password: { label: "Contraseña", type: "password", placeholder: '******' }
       },
       async authorize(credentials, req) {
-        console.log({ credentials })
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
@@ -51,8 +47,6 @@ export const authConfig: NextAuthOptions = {
       authorization: {
         params: { scope: scopes },
       },
-      // scopes.concat(" guilds.members.read")
-      // allowDangerousEmailAccountLinking: true,
     })
   ],
   session: {
@@ -87,7 +81,6 @@ export const authConfig: NextAuthOptions = {
     // },
 
     async jwt({ token, user, account }) {
-      // console.log({ user, account })
       if (account) {
         token.accessToken = account.access_token!
 
@@ -107,7 +100,6 @@ export const authConfig: NextAuthOptions = {
             }
 
             token.user = existUser ? existUser as IUserFull : newUser as IUserFull
-            // token.isDevtallesUser = await isRegisterInServerDiscord(account.access_token!)
             break;
 
           case 'credentials':
@@ -119,14 +111,8 @@ export const authConfig: NextAuthOptions = {
     },
 
     async session({ session, user, token }) {
-
-      // if (token) {
       session.accessToken = token.accessToken
       session.user = token.user
-      // if (token.isDevtallesUser) {
-      //   session.isDevtallesUser = token.isDevtallesUser
-      // }
-      // }
       return session
     }
   }

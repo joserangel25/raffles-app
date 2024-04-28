@@ -27,7 +27,7 @@ export default async function ImPlayingRaffles({ searchParams }: Props) {
 
   return (
     <div>
-      <div className="w-full flex flex-col gap-3 sm:flex-row justify-between">
+      <div className="w-full flex flex-col gap-3 sm:flex-row ">
         <input
           type="text"
           className="py-2 rounded-lg bg-secondary outline-none pl-3 w-full sm:w-2/3"
@@ -35,19 +35,23 @@ export default async function ImPlayingRaffles({ searchParams }: Props) {
         />
       </div>
 
-      <ul className="w-full flex flex-wrap gap-7 sm:gap-2 md:gap-5 my-5">
-        {
-          raffles?.length ?
-            raffles?.map(raffle => (
-              <CardRaffle
-                key={raffle.id}
-                raffle={raffle}
-                session={session} />
-            )) : (
-              <p className="text-xl font-bold text-center">Actualmente no participas en ninguna rifa</p>
-            )
-        }
-      </ul>
+      {
+        raffles?.length ?
+          (<ul className="w-full flex flex-wrap gap-7 sm:gap-2 md:gap-5 my-5">
+            {
+              raffles?.map(raffle => (
+                <CardRaffle
+                  key={raffle.id}
+                  raffle={raffle}
+                  session={session} />)
+              )}
+          </ul>) : (
+            <>
+              <h2 className="text-lg font-medium text-center mt-4">Actualmente no participas en ninguna rifa</h2>
+              <h1 className="text-center font-bold text-xl">¡Ve al <Link href={'/'} className="text-forthy font-bold hover:underline"> home</Link> para que encuentres fabulosos sorteos y empiezes a particiar!</h1>
+            </>
+          )
+      }
 
       {
         Boolean(raffles.length) && (

@@ -1,13 +1,11 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form"
 import { getTimestamps, notify } from "@/utils";
 import { createNewRaffle } from "@/actions";
-import { WidgetUploadImages } from "@/components/ui/widget-upload-images/WidgetUploadImages";
-import Image from "next/image";
-import { TrashIcon } from "@/components/ui/icons";
+import { TrashIcon, WidgetUploadImages } from "@/components";
 
 type InputsForm = {
   title: string;
@@ -24,10 +22,6 @@ export const NewRaffleForm = () => {
   useEffect(() => {
     const url = localStorage.getItem('urlImage')
     setUrlImage(url !== 'null' ? url : null)
-
-    return () => {
-      console.log('me salí de la ruta newRaffle')
-    }
   }, [])
 
   const { handleSubmit, register, formState } = useForm<InputsForm>()
@@ -55,6 +49,11 @@ export const NewRaffleForm = () => {
       localStorage.setItem('urlImage', JSON.stringify(null))
       window.location.replace('/dashboard/my-raffles')
     }, 1500);
+  }
+
+  const deleteImage = () => {
+    setUrlImage(null)
+    localStorage.setItem('urlImage', JSON.stringify(null))
   }
 
   return (
@@ -101,7 +100,7 @@ export const NewRaffleForm = () => {
             <button
               type="button"
               className="p-2 bg-red-500 text-white absolute top-0 right-0 rounded-l-md"
-              onClick={() => setUrlImage(null)}
+              onClick={deleteImage}
             >
               <TrashIcon />
             </button>

@@ -37,16 +37,23 @@ export default async function MyRafflesPage({ searchParams }: Props) {
         <Link href={'/dashboard/my-raffles/new'} className="btn btn-secondary ">Nuevo</Link>
       </div>
 
-      <ul className="w-full flex flex-wrap gap-7 sm:gap-2 md:gap-5 my-5">
-        {
-          raffles?.length ?
-            raffles?.map(raffle => (
-              <CardRaffle key={raffle.id} raffle={raffle} session={session} />
-            )) : (
-              <p className="text-xl font-bold text-center ">Actualmente no administras ninguna rifa</p>
-            )
-        }
-      </ul>
+      {
+        raffles?.length ?
+          (<ul className="w-full flex flex-wrap gap-7 sm:gap-2 md:gap-5 my-5">
+            {
+              raffles?.map(raffle => (
+                <CardRaffle
+                  key={raffle.id}
+                  raffle={raffle}
+                  session={session} />)
+              )}
+          </ul>) : (
+            <>
+              <h2 className="text-lg font-medium text-center mt-4">No tienes ningún sorteo.</h2>
+              <h1 className="text-xl font-bold text-center ">¡Esta es tu oportunidad de sortear algo a la comunidad!</h1>
+            </>
+          )
+      }
 
       {
         Boolean(raffles.length) && (

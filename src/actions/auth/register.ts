@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs'
 interface Props {
   email: string;
   name: string;
-  image: string;
+  image?: string;
   password?: string;
   discordId?: string;
 }

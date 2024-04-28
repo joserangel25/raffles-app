@@ -27,7 +27,7 @@ export const Avatar = ({ session }: Props) => {
       </div>
 
       {
-        openPopUp && (<PopUp setShowPopUp={() => setOpenPopUp(prevState => !prevState)} />)
+        openPopUp && (<PopUp isShowPopUp={openPopUp} setShowPopUp={() => setOpenPopUp(prevState => !prevState)} />)
       }
     </div>
   )

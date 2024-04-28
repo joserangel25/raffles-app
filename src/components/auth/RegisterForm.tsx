@@ -18,7 +18,7 @@ export const RegisterForm = () => {
     try {
       await createNewUser(data)
       await loginUser({ email: data.email, password: data.password })
-      window.location.reload()
+      window.location.replace('/dashboard/my-raffles')
     } catch (error) {
       console.log(error)
       notify({ type: 'error', message: 'No se puedo registrar el usuario.' })
