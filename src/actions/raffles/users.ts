@@ -6,14 +6,14 @@ import { authConfig } from "@/app/api/auth/[...nextauth]/route"
 import { ENV } from "@/env"
 import { isTimeExpired } from "@/utils"
 
-const checkIsSameUser = async (id: string, raffleId: string) => {
+const checkIsSameUser = async (authorId: string) => {
   const session = await getServerSession(authConfig)
 
   if (!session) {
     throw new Error("Debes iniciar sesión para poder hacer esta solicitud.");
   }
-  if (session.user.id === id) {
-    throw new Error("No te puedes agregar como moderador a tu propia rifa.");
+  if (session.user.id === authorId) {
+    throw new Error("No te puedes agregar como jugador/modrador a tu propia rifa.");
   }
 }
 
@@ -42,7 +42,6 @@ interface PropsToogleUserRaffle {
 export const createUserInRaffle = async ({ userId, raffleId, role = 'player' }: PropsToogleUserRaffle) => {
 
   try {
-    await checkIsSameUser(userId, raffleId)
 
     const raffleDb = await prisma.raffle.findUnique({ where: { id: raffleId } })
 
@@ -52,6 +51,8 @@ export const createUserInRaffle = async ({ userId, raffleId, role = 'player' }: 
         message: 'El Sorteo no existe ' + raffleId
       }
     }
+
+    await checkIsSameUser(raffleDb.authorId)
 
     if (raffleDb.played) {
       return {
@@ -113,9 +114,6 @@ export const findUserRegistered = async (email: string) => {
       email: true,
       image: true,
       discordId: true,
-      myRaffles: {
-        include: { participants: true }
-      },
       participateRaffles: true
     }
   })

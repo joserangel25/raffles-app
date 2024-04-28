@@ -29,14 +29,16 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
   return (
     <>
       <div className="te py-4 rounded-lg w-full flex flex-col lg:flex-row lg:justify-center gap-3 text-secondary">
-        <figure className="max-w-1/2">
+        <figure
+        // className="max-w-1/2 lg:max-w-[700px]"
+        >
           <Image
             src={raffle.image ?? '/images/rifa.png'}
             alt={`Imagen del sorteo ${raffle.title}`}
-            width="0"
-            height="0"
-            sizes="100vw"
-            style={{ width: '100%', height: 'auto' }}
+            width="400"
+            height="400"
+            objectFit="cover"
+          // style={{ width: '100%', height: 'auto' }}
           />
         </figure>
 
