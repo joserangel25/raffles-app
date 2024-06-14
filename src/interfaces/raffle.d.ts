@@ -15,7 +15,8 @@ export interface IRaffle {
   discordServerId: string | null;
   author?: { name: string }
   winnerId: string;
-  serverDiscord: ServerDiscord | null;
+  serverDiscord?: ServerDiscord | null;
+  serverDiscordId: number | null;
 }
 
 export interface IParticipant {
