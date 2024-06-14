@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { getTimestamps, notify } from "@/utils";
 import { createNewRaffle } from "@/actions";
 import { TrashIcon, WidgetUploadImages } from "@/components";
+import { ServerDiscord } from "@/interfaces/raffle";
 
 type InputsForm = {
   title: string;
@@ -13,6 +14,9 @@ type InputsForm = {
   maxParticipants: string;
   endDate: number;
   discordServerId?: string;
+  idServer?: string;
+  nameServer?: string;
+  urlServer?: string;
 }
 
 export const NewRaffleForm = () => {
@@ -35,11 +39,21 @@ export const NewRaffleForm = () => {
   }, [showServerDiscord, setValue])
 
   const onSubmitFormNewRaffle: SubmitHandler<InputsForm> = async (data) => {
+
+    const serverDiscord = {
+      idServer: data.discordServerId ?? '',
+      nameServer: data.nameServer ?? '',
+      urlServer: data.urlServer ?? ''
+    }
+
+    const { nameServer, urlServer, idServer, ...rest } = data;
+
     const raffle = {
-      ...data,
+      ...rest,
       image: urlImage,
       maxParticipants: showLimitNumber ? Number(data.maxParticipants) : null,
-      discordServerId: showServerDiscord ? data.discordServerId : null
+      discordServerId: showServerDiscord ? data.discordServerId! : null,
+      serverDiscord: showServerDiscord ? serverDiscord : null
     }
 
     if (data.endDate) {
@@ -184,19 +198,34 @@ export const NewRaffleForm = () => {
             <label htmlFor="switch" className="hidden"></label>
             <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-800 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
           </label>
-
-          {
-            showServerDiscord && (
-              <input
-                type="text"
-                className="w-[190px] input-base fade-in"
-                placeholder="383499458937584"
-                {...register('discordServerId', { required: showServerDiscord })}
-              />
-            )
-          }
         </div>
       </div>
+      {
+        showServerDiscord && (
+          <div className="w-full space-y-2">
+            <input
+              type="text"
+              className="w-full input-base fade-in"
+              placeholder="Discord Server ID"
+              {...register('discordServerId', { required: showServerDiscord })}
+            />
+
+            <input
+              type="text"
+              className="w-full input-base fade-in"
+              placeholder="Discord Server Name"
+              {...register('nameServer', { required: showServerDiscord })}
+            />
+
+            <input
+              type="text"
+              className="w-full input-base fade-in"
+              placeholder="Discord Server Url"
+              {...register('urlServer', { required: showServerDiscord })}
+            />
+          </div>
+        )
+      }
 
       <button
         type="submit"

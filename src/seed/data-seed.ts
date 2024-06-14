@@ -38,20 +38,20 @@ export const initialData: SeedData = {
     {
       title: "Rifa de locos",
       description: "Es una rifa muy buena",
-      authorId: "98ab2589-2b24-40bf-bf4e-dd9f04001878",
+      // authorId: "98ab2589-2b24-40bf-bf4e-dd9f04001878",
       endDate: null
     },
     {
       title: "TV de 100 pulgadas",
       description: "Es una rifa muy buena",
       // endDate: new Date().toISOString(),
-      authorId: "f795f93d-d489-4309-9a45-4f954ace07b5",
+      // authorId: "f795f93d-d489-4309-9a45-4f954ace07b5",
       endDate: null
     },
     {
       title: "Viaje a Perú",
       description: "Todo pago, al gratín!",
-      authorId: "98ab2589-2b24-40bf-bf4e-dd9f04001878",
+      // authorId: "98ab2589-2b24-40bf-bf4e-dd9f04001878",
       endDate: null
     },
   ]

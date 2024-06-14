@@ -41,6 +41,9 @@ model Raffle {
   participants Participant[]
   // winner User @relation((fields: [winnerId], references: [id]))
   winnerId     String        @default("")
+
+  serverDiscord   ServerDiscord? @relation(fields: [serverDiscordId], references: [id])
+  serverDiscordId Int?
 }
 
 enum Role {
@@ -57,4 +60,14 @@ model Participant {
   role     Role   @default(player)
 
   @@unique([userId, raffleId])
+}
+
+model ServerDiscord {
+  id         Int    @id @unique @default(autoincrement())
+  idServer   String
+  nameServer String
+  urlServer  String
+
+  // relations
+  raffles Raffle[]
 }

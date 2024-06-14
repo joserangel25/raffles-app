@@ -89,7 +89,7 @@ export const ButtonPartitipate = ({ session, discordServerId }: Props) => {
   }, [])
 
   useEffect(() => {
-    const participated = JSON.parse(localStorage.getItem('participated') ?? '')
+    const participated = JSON.parse(localStorage.getItem('participated') ?? '0')
     const onEffectRegisterPlayerinRaffle = async () => {
       if (participated && session?.accessToken) {
         const discordGuildOk = await isRegisterInServerDiscord(session!.accessToken, discordServerId ?? '')

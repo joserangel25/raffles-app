@@ -24,7 +24,8 @@ export const getRaffleById = async (id: string): Promise<IRaffle | null> => {
         },
         author: {
           select: { name: true }
-        }
+        },
+        serverDiscord: true
       }
     })
     return raffle

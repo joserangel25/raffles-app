@@ -7,10 +7,10 @@ import { StatusRaffle } from "../StatusRaffle"
 import { ButtonAction } from "../ButtonAction"
 import { ModeratorCard } from "@/components"
 import { ButtonPartitipate } from "../ButtonPartitipate.client"
-
-import type { IRaffle } from "@/interfaces/raffle"
 import { AddUserIcon } from "@/components/ui/icons"
+
 import { formatDate } from "@/utils"
+import type { IRaffle } from "@/interfaces/raffle"
 
 interface Props {
   raffle: IRaffle;
@@ -18,7 +18,6 @@ interface Props {
 
 export const DetailRaffleView = async ({ raffle }: Props) => {
   const session = await getServerSession(authConfig);
-  console.log(raffle)
 
   const moderators = raffle?.participants.filter(user => user.role === 'moderator')
   const participants = raffle?.participants.filter(user => user.role === 'player')
@@ -80,8 +79,19 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
               )
             }
             {
-              raffle.discordServerId && (
-                <p>Debes estar en el Server del creador para poder participar.</p>
+              raffle.serverDiscord?.id && (
+                <>
+                  <p>Debes ser parte de la comunidad de Discord del creador:
+                    <span className="font-bold ml-2 text-forthy">{raffle.serverDiscord.nameServer}</span>
+                  </p>
+                  <p>¿No lo eres? {' '}
+                    <a
+                      href={raffle.serverDiscord.urlServer}
+                      target="_blank"
+                      className="underline text-tirthy"
+                    >Dale clic al enlace para unirte</a>
+                  </p>
+                </>
               )
             }
           </div>
