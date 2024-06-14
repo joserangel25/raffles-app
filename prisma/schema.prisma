@@ -33,6 +33,7 @@ model Raffle {
   endDate         BigInt?
   image           String?
   played          Boolean @default(false)
+  discordServerId String?
 
   // Relaciones
   author       User          @relation(fields: [authorId], references: [id])

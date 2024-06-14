@@ -12,6 +12,7 @@ export interface IRaffle {
   image: string | null;
   played: boolean
   authorId: string;
+  discordServerId: string | null;
   author?: { name: string }
   winnerId: string;
 }

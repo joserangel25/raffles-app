@@ -1,6 +1,7 @@
 'use server'
 
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/app/api/auth/[...nextauth]/route";
 
@@ -20,6 +21,7 @@ export const createNewRaffle = async (data: CreateRaffle) => {
       data: { ...data, authorId: session.user.id }
     })
 
+    revalidatePath('/')
     return {
       ok: true
     }

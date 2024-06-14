@@ -3,17 +3,18 @@
 import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { authConfig } from "@/app/api/auth/[...nextauth]/route"
-import { ENV } from "@/env"
 import { isTimeExpired } from "@/utils"
 
-const checkIsSameUser = async (authorId: string) => {
+const checkIsSameUser = async (authorId: string, newUser: string) => {
   const session = await getServerSession(authConfig)
 
   if (!session) {
     throw new Error("Debes iniciar sesión para poder hacer esta solicitud.");
   }
-  if (session.user.id === authorId) {
-    throw new Error("No te puedes agregar como jugador/modrador a tu propia rifa.");
+
+  const logedUser = session.user.id
+  if (logedUser === authorId && logedUser === newUser) {
+    throw new Error("No te puedes agregar como jugador/moderador a tu propia rifa.");
   }
 }
 
@@ -52,7 +53,7 @@ export const createUserInRaffle = async ({ userId, raffleId, role = 'player' }: 
       }
     }
 
-    await checkIsSameUser(raffleDb.authorId)
+    await checkIsSameUser(raffleDb.authorId, userId)
 
     if (raffleDb.played) {
       return {
@@ -119,12 +120,12 @@ export const findUserRegistered = async (email: string) => {
   })
 }
 
-export const isRegisterInServerDiscord = async (token: string) => {
+export const isRegisterInServerDiscord = async (token: string, discordServerId: string) => {
   const res = await fetch(`https://discord.com/api/users/@me/guilds`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   })
   const serversUser: { id: string, name: string }[] = await res.json()
-  return serversUser.some(server => server.id === ENV.DISCORD_ID_SERVER)
+  return serversUser.some(server => server.id === discordServerId)
 }

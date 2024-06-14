@@ -18,6 +18,7 @@ interface Props {
 
 export const DetailRaffleView = async ({ raffle }: Props) => {
   const session = await getServerSession(authConfig);
+  console.log(raffle)
 
   const moderators = raffle?.participants.filter(user => user.role === 'moderator')
   const participants = raffle?.participants.filter(user => user.role === 'player')
@@ -30,7 +31,7 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
     <>
       <div className="te py-4 rounded-lg w-full flex flex-col lg:flex-row lg:justify-center gap-3 text-secondary">
         <figure
-        // className="max-w-1/2 lg:max-w-[700px]"
+          className="max-w-1/2 lg:max-w-[700px]"
         >
           <Image
             src={raffle.image ?? '/images/rifa.png'}
@@ -38,7 +39,6 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
             width="400"
             height="400"
             objectFit="cover"
-          // style={{ width: '100%', height: 'auto' }}
           />
         </figure>
 
@@ -77,6 +77,11 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
                 </p>
               ) : (
                 <p>No tiene límite de usuarios</p>
+              )
+            }
+            {
+              raffle.discordServerId && (
+                <p>Debes estar en el Server del creador para poder participar.</p>
               )
             }
           </div>
@@ -124,7 +129,7 @@ export const DetailRaffleView = async ({ raffle }: Props) => {
 
         {
           (!isAuthor && !isModerator && !isPlayer && !raffle.played) && (
-            <ButtonPartitipate session={session} />
+            <ButtonPartitipate session={session} discordServerId={raffle.discordServerId} />
           )
         }
 

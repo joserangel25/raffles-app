@@ -12,11 +12,13 @@ type InputsForm = {
   description: string;
   maxParticipants: string;
   endDate: number;
+  discordServerId?: string;
 }
 
 export const NewRaffleForm = () => {
   const [showLimitNumber, setShowLimitNumber] = useState(false)
   const [showEndDateToInscription, setShowEndDateToInscription] = useState(false)
+  const [showServerDiscord, setShowServerDiscord] = useState(false)
   const [urlImage, setUrlImage] = useState<string | null>(null)
 
   useEffect(() => {
@@ -24,13 +26,20 @@ export const NewRaffleForm = () => {
     setUrlImage(url !== 'null' ? url : null)
   }, [])
 
-  const { handleSubmit, register, formState } = useForm<InputsForm>()
+  const { handleSubmit, register, formState, setValue } = useForm<InputsForm>()
+
+  useEffect(() => {
+    if (!showServerDiscord) {
+      setValue('discordServerId', undefined)
+    }
+  }, [showServerDiscord, setValue])
 
   const onSubmitFormNewRaffle: SubmitHandler<InputsForm> = async (data) => {
     const raffle = {
       ...data,
       image: urlImage,
-      maxParticipants: showLimitNumber ? Number(data.maxParticipants) : null
+      maxParticipants: showLimitNumber ? Number(data.maxParticipants) : null,
+      discordServerId: showServerDiscord ? data.discordServerId : null
     }
 
     if (data.endDate) {
@@ -59,10 +68,10 @@ export const NewRaffleForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmitFormNewRaffle)}
-      className="space-y-4  w-full md:w-[400px] md:mx-auto  text-sm"
+      className="space-y-3  w-full max-w-[500px] md:mx-auto  text-sm"
     >
       <div className="flex flex-col gap-1 ">
-        <label htmlFor="title" className="text-sm pl-3 font-semibold">Nombre</label>
+        <label htmlFor="title" className="text-sm pl-3 font-semibold">Título</label>
         <input
           type="text"
           id="title"
@@ -112,7 +121,7 @@ export const NewRaffleForm = () => {
       }
 
       {/* Limite de participantes */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between lg:h-[36px]">
         <span className="">¿Límite de registros?</span>
 
         <div className="flex items-center gap-2">
@@ -139,7 +148,7 @@ export const NewRaffleForm = () => {
       </div>
 
       {/* Fecha límite de inscripción */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between lg:h-[36px]">
         <span>¿Fecha fin de inscripción?</span>
 
         <div className="flex items-center gap-2">
@@ -155,6 +164,34 @@ export const NewRaffleForm = () => {
                 type="date"
                 className="w-30 pr-2 text-white input-base fade-in text-sm"
                 {...register('endDate', { required: showEndDateToInscription })}
+              />
+            )
+          }
+        </div>
+      </div>
+
+      {/* Servidor Propio de Discord */}
+      <div className="flex items-center justify-between flex-wrap lg:h-[36px]">
+        <span>¿Debe estar en Servidor de Discord?</span>
+
+        <div className={`flex items-center gap-2`}>
+          <label className="relative inline-flex cursor-pointer items-center">
+            <input
+              id="switch"
+              type="checkbox"
+              className="peer sr-only"
+              onChange={e => setShowServerDiscord(e.target.checked)} />
+            <label htmlFor="switch" className="hidden"></label>
+            <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-800 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
+          </label>
+
+          {
+            showServerDiscord && (
+              <input
+                type="text"
+                className="w-[190px] input-base fade-in"
+                placeholder="383499458937584"
+                {...register('discordServerId', { required: showServerDiscord })}
               />
             )
           }
